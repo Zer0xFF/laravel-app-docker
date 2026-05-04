@@ -13,6 +13,14 @@ RUN apt-get install -y libsqlite3-dev libpng-dev libjpeg-dev libfreetype6-dev \
 
 RUN a2enmod rewrite
 
+# Increase PHP limits for larger workloads/uploads
+RUN { \
+    echo 'memory_limit=2G'; \
+    echo 'upload_max_filesize=2G'; \
+    echo 'post_max_size=2G'; \
+    echo 'max_execution_time=300'; \
+  } > /usr/local/etc/php/conf.d/99-custom-limits.ini
+
 # Update Apache config to point to Laravel project public directory
 RUN sed -i 's#/var/www/html#/var/www/html/public#g' /etc/apache2/sites-available/000-default.conf
 
